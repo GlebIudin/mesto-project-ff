@@ -11,16 +11,18 @@
 
 <body class="page">
   <div class="page__content">
-    <header class="header page__section"> 
+    <header class="header page__section">
       <img src="<%=require('./images/logo.svg')%>" alt="Логотип проекта масто" class="logo header__logo">
     </header>
     <main class="content">
       <section class="profile page__section">
-        <div class="profile__image" style="background-image: url(<%=require('./images/ava-test.jpg')%>)"></div>
+        <div class="profile__avatar-section">
+          <img class="profile__image"></img>
+        </div>
         <div class="profile__info">
-          <h1 class="profile__title">ИмяТест</h1>
+          <h1 class="profile__title"></h1>
           <button class="profile__edit-button" type="button"></button>
-          <p class="profile__description">ДжобТест</p>
+          <p class="profile__description"></p>
         </div>
         <button class="profile__add-button" type="button"></button>
       </section>
@@ -38,11 +40,15 @@
       <div class="popup__content">
         <button type="button" class="popup__close"></button>
         <h3 class="popup__title">Редактировать профиль</h3>
-        <form id='profileForm' class="popup__form" name="edit-profile">
-          <input id = 'nameInput' type="text" name="name" class="popup__input popup__input_type_name" placeholder="Имя" required>
-          <input id = 'jobInput' type="text" name="description" class="popup__input popup__input_type_description" placeholder="Занятие"
-            required>
-          <button type="submit" class="button popup__button">Сохранить</button>
+        <form id='profileForm' class="popup__form" name="edit-profile" novalidate>
+          <input id='nameInput' type="text" name="name" class="popup__input popup__input_type_name" placeholder="Имя"
+            required minlength="2" maxlength="40" pattern="[a-zA-zа-яА-яёЁ\s\-]+$"
+            data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы">
+          <span class="popup__input-error" id='nameInput-error'></span>
+          <input id='jobInput' type="text" name="description" class="popup__input popup__input_type_description"
+            placeholder="Занятие" required minlength="2" maxlength="200">
+          <span class="popup__input-error" id="jobInput-error"></span>
+          <button id="profileSubmitButton" type="submit" class="button popup__button">Сохранить</button>
         </form>
       </div>
     </div>
@@ -50,12 +56,27 @@
       <div class="popup__content">
         <button type="button" class="popup__close"></button>
         <h3 class="popup__title">Новое место</h3>
-        <form id='addPhotoForm' class="popup__form" name="new-place">
-          <input id='photoTitleInput' type="text" name="place-name" class="popup__input popup__input_type_card-name" placeholder="Название"
-            required>
-          <input id='photoURLInput' type="url" name="link" class="popup__input popup__input_type_url" placeholder="Ссылка на картинку"
-            required>
+        <form id='addPhotoForm' class="popup__form" name="new-place" novalidate>
+          <input id='photoTitleInput' type="text" name="place-name" class="popup__input popup__input_type_card-name"
+            placeholder="Название" required minlength="2" maxlength="30" pattern="[a-zA-zа-яА-яёЁ\s\-]+$"
+            data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы">
+          <span class="popup__input-error" id="photoTitleInput-error"></span>
+          <input id='photoURLInput' type="url" name="link" class="popup__input popup__input_type_url"
+            placeholder="Ссылка на картинку" required>
+          <span class="popup__input-error" id="photoURLInput-error"></span>
           <button id="buttonSubmitPhoto" type="submit" class="button popup__button">Сохранить</button>
+        </form>
+      </div>
+    </div>
+    <div id="changeAvatarPopup" class="popup popup_type_avatar popup_is-animated">
+      <div class="popup__content">
+        <button type="button" class="popup__close"></button>
+        <h3 class="popup__title">Обновить аватар</h3>
+        <form id="changeAvatarForm" class="popup__form" name="edit-avatar" novalidate>
+          <input id='avatarLinkInput' type="url" name="avatar-link" class="popup__input popup__input_type_avatar-link"
+            placeholder="Введите ссылку на новый аватар" required>
+          <span class="popup__input-error" id="avatarLinkInput-error"></span>
+          <button id="avatarSubmitButton" type="submit" class="button popup__button">Сохранить</button>
         </form>
       </div>
     </div>
@@ -74,7 +95,10 @@
       <div class="card__description">
         <h2 id="photoTitleTemplate" class="card__title">
         </h2>
-        <button type="button" class="card__like-button"></button>
+        <div class="card__like-elements">
+          <button type="button" class="card__like-button"></button>
+          <div class="card__like-amount" id="cardLikeAmount"></div>
+        </div>
       </div>
     </li>
   </template>

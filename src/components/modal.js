@@ -5,6 +5,7 @@ function openModal(popup) {
 
 function closeModal(popup) {
     popup.classList.remove('popup_is-opened')
+    document.removeEventListener('keydown', closeModalByEsc);
 };
 
 // Функция закрытия попапа по клику на оверлэй
@@ -24,4 +25,4 @@ const closeModalByEsc = (evt) => {
     }
 }
 
-export {openModal, closeModal, closeModalByOverlay, closeModalByEsc};
+export { openModal, closeModal, closeModalByOverlay, closeModalByEsc };
