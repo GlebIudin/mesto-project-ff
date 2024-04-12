@@ -230,8 +230,8 @@ function renderLoading(evt, isLoading) {
 
 function toggleLike(id, pushedLike) {
   if (pushedLike) {
-    return sendToggleLike(id);
-  } else {
     return sendUntoggleLike(id);
+  } else {
+    return sendToggleLike(id);
   }
 }
