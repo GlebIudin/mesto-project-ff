@@ -67,7 +67,7 @@ Promise.all([
       const newCard = createCard(
         data,
         id,
-        deleteCard,
+        deleteCardCallback,
         openCardPopup,
         toggleLike,
         data.likes
@@ -78,6 +78,12 @@ Promise.all([
   .catch((error) => {
     console.log(error)
   })
+
+  const deleteCardCallback = (id, evt) => {
+    deleteCard(id)
+    .then(() => evt.target.closest(".card").remove())
+    .catch((err) => console.log(err));
+  }
 
 // Заполнение инпутов при открытие формы редактирования name/job
 
@@ -195,7 +201,7 @@ photoAddPopup.addEventListener("submit", (evt) => {
       const post = createCard(
         data,
         id,
-        deleteCard,
+        deleteCardCallback,
         openCardPopup,
         toggleLike,
         data.likes
@@ -219,11 +225,7 @@ enableValidation(config)
 
 function renderLoading(evt, isLoading) {
   const submitButton = evt.target.querySelector('.popup__button');
-  if (isLoading) {
-    submitButton.textContent = 'Сохранение...'
-  } else {
-    submitButton.textContent = 'Сохранить'
-  }
+  submitButton.textContent = isLoading ?  'Сохранение...' : 'Сохранить'
 }
 
 // Лайк на карточки
