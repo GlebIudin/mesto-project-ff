@@ -4,7 +4,7 @@ import {
   openModal,
 } from "./components/modal.js";
 
-import { createCard } from "./components/card.js";
+import { createCard, toggleLike, untoggleLike } from "./components/card.js";
 
 import "./pages/index.css";
 
@@ -69,7 +69,7 @@ Promise.all([
         id,
         deleteCardCallback,
         openCardPopup,
-        toggleLike,
+        toggleLikeCallback,
         data.likes
       );
       placesList.append(newCard);
@@ -79,11 +79,33 @@ Promise.all([
     console.log(error)
   })
 
-  const deleteCardCallback = (id, evt) => {
-    deleteCard(id)
+const deleteCardCallback = (id, evt) => {
+  deleteCard(id)
     .then(() => evt.target.closest(".card").remove())
     .catch((err) => console.log(err));
+}
+
+// Функционал лайка карточки
+
+function toggleLikeCallback(id, likeAmount, likeButton, pushedLike) {
+  if(!likeButton.classList.contains('card__like-button_is-active')) {
+    sendToggleLike(id)
+    .then((res) => {
+      toggleLike(likeButton);
+      likeAmount.textContent = res.likes.length;
+      pushedLike = true;
+    })
+    .catch((err) => console.log(err))
+  } else {
+    sendUntoggleLike(id)
+    .then((res) => {
+      untoggleLike(likeButton);
+      likeAmount.textContent = res.likes.length;
+      pushedLike = false;
+    })
+    .catch((err) => console.log(err))
   }
+}
 
 // Заполнение инпутов при открытие формы редактирования name/job
 
@@ -203,7 +225,7 @@ photoAddPopup.addEventListener("submit", (evt) => {
         id,
         deleteCardCallback,
         openCardPopup,
-        toggleLike,
+        toggleLikeCallback,
         data.likes
       );
 
@@ -225,15 +247,6 @@ enableValidation(config)
 
 function renderLoading(evt, isLoading) {
   const submitButton = evt.target.querySelector('.popup__button');
-  submitButton.textContent = isLoading ?  'Сохранение...' : 'Сохранить'
+  submitButton.textContent = isLoading ? 'Сохранение...' : 'Сохранить'
 }
 
-// Лайк на карточки
-
-function toggleLike(id, pushedLike) {
-  if (pushedLike) {
-    return sendUntoggleLike(id);
-  } else {
-    return sendToggleLike(id);
-  }
-}

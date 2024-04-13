@@ -6,7 +6,7 @@ function untoggleLike(cardLikeButton) {
   cardLikeButton.classList.remove("card__like-button_is-active");
 }
 
-function createCard(cardInfo, userId, deleteCardCallback, openCardPopup, toggleLikeHandler) {
+function createCard(cardInfo, userId, deleteCardCallback, openCardPopup, toggleLikeCallback) {
   const cardTemplate = document.querySelector('#card-template').content;
   const cardClone = cardTemplate.querySelector('.card').cloneNode(true);
   const cardPic = cardClone.querySelector('.card__image');
@@ -31,17 +31,19 @@ function createCard(cardInfo, userId, deleteCardCallback, openCardPopup, toggleL
   } else {
     deleteButton.remove();
   }
+  
   let pushedLike = cardInfo.likes.some((like) =>
     like._id === userId);
 
   if (pushedLike) {
     toggleLike(likeButton);
   }
+
   likeButton.addEventListener("click", () => {
-    toggleLikeHandler(cardInfo._id, pushedLike)
+    toggleLikeCallback(cardInfo._id, likeAmount, likeButton, pushedLike)
   });
 
   return cardClone
 }
 
-export { createCard }
+export { createCard, toggleLike, untoggleLike }
